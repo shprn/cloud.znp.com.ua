@@ -1,0 +1,39 @@
+.offset-top {
+    margin-top: 70px;
+}
+
+.navbar .nav-item.active > .nav-link {
+    background: rgb(255, 255, 255);
+    color: black;
+    border-radius: 10px;
+}
+
+.upload-file {
+    border: 1px solid #ccc;
+    cursor: pointer;
+}
+
+.thumb img {
+    border-radius: 5px;
+    background-color: #fff;
+    border: 1px solid #ddd;
+    padding: 5px;
+}
+
+.thumb {
+    padding: 5px;
+}
+
+.center-block {
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.img-title {
+    position: absolute;
+    bottom: 12px;
+    right: 20%;
+    color: white;
+    font-size: x-small;
+}
