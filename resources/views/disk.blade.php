@@ -17,7 +17,7 @@
 
         @foreach($files as $path => $params)
             <a class="col-xl-2 col-lg-3 col-md-4 col-6 thumb" href="{{ asset($params['url']) }}">
-                <img class="img-fluid center-block" src="{{ $params['url_image'] }}" alt=" {{ $path}}" title="{{ $path}}">
+                <img class="img-fluid" src="{{ $params['url_image'] }}" alt=" {{ $path}}" title="{{ $path}}">
                 <!-- span class="img-title">{{ basename($path) }}</span -->
             </a>
         @endforeach

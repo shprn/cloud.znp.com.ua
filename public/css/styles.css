@@ -8,9 +8,24 @@
     border-radius: 10px;
 }
 
-.upload-file {
-    border: 1px solid #ccc;
+.upload-form {
+    position: relative;
+}
+
+.upload-form input[type="file"] {
+    position: absolute;
     cursor: pointer;
+    top: 0;
+    left: 0;
+    height: 100%;
+    width: 100%;
+    opacity: 0;
+}
+
+.thumb {
+    display: flex;
+    border-radius: 5px;
+    padding: 5px;
 }
 
 .thumb img {
@@ -18,16 +33,11 @@
     background-color: #fff;
     border: 1px solid #ddd;
     padding: 5px;
+    margin: auto;
 }
 
-.thumb {
-    padding: 5px;
-}
-
-.center-block {
-    display: block;
-    margin-left: auto;
-    margin-right: auto;
+.thumb:hover {
+    background-color: #c0ddf6;
 }
 
 .img-title {
