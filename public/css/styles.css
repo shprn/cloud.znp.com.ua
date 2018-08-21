@@ -2,12 +2,6 @@
     margin-top: 70px;
 }
 
-.navbar .nav-item.active > .nav-link {
-    background: rgb(255, 255, 255);
-    color: black;
-    border-radius: 10px;
-}
-
 .upload-form {
     position: relative;
 }
@@ -22,13 +16,13 @@
     opacity: 0;
 }
 
-.thumb {
+.thumb-container {
     display: flex;
     border-radius: 5px;
     padding: 5px;
 }
 
-.thumb img {
+.thumb {
     border-radius: 5px;
     background-color: #fff;
     border: 1px solid #ddd;
@@ -36,14 +30,10 @@
     margin: auto;
 }
 
-.thumb:hover {
+.thumb-container:hover {
     background-color: #c0ddf6;
 }
 
-.img-title {
-    position: absolute;
-    bottom: 12px;
-    right: 20%;
-    color: white;
-    font-size: x-small;
+.thumb .img-title {
+    text-align: center;
 }
