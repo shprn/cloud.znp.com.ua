@@ -2,7 +2,7 @@
     <div class="container-fluid">
         <div class="row">
             <div class="col-12">
-                <ol class="breadcrumb">
+                <ol class="breadcrumb mb-2">
                     @foreach($links as $elem => $link)
                         @if($loop->last)
                             <li class="breadcrumb-item active" aria-current="page">{{ $elem }}</li>

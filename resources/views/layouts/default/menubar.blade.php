@@ -1,5 +1,5 @@
 @section("menubar")
-    <nav class="navbar navbar-expand-md navbar-dark bg-dark fixed-top">
+    <nav class="navbar navbar-expand-md navbar-dark bg-dark mb-2">
         <a class="navbar-brand" href="/">
             <img src="{{ asset('img/logo.png') }}" height="30" alt="">
             Cloud

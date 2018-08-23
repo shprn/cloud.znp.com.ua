@@ -1,6 +1,13 @@
+@media (max-width: 767px) {
+    html {
+        font-size: 150%;
+    }
+}
 
-.offset-top {
-    margin-top: 70px;
+@media (min-width: 768px) {
+    .sidebar {
+        max-width: 200px;
+    }
 }
 
 .upload-form {

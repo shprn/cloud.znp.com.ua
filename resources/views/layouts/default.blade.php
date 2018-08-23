@@ -10,17 +10,17 @@
 
     <!-- Styles -->
     <link rel="stylesheet" href="{{ asset('css/app.css?ver=1.0.0') }}">
-    <link rel="stylesheet" href="{{ asset('css/styles.css?ver=1.0.0') }}">
+    <link rel="stylesheet" href="{{ asset('css/styles.css?ver=1.0.1') }}">
     <link rel="stylesheet" href="{{ asset('css/blueimp-gallery.min.css?ver=2.33.0') }}">
 </head>
 <body>
     <!-- Main menu -->
     @yield("menubar")
 
-    <div class="container-fluid offset-top" id="app">
+    <div class="container-fluid" id="app">
         <div class="row">
             <!-- Left sidebar-->
-            <div class="col-xl-2 col-lg-3 col-md-4 col-sm-12" style="z-index: 1000;">
+            <div class="col-12 sidebar" style="z-index: 1000;">
                 @yield("sidebar")
             </div>
 
