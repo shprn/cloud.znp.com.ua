@@ -1,3 +1,4 @@
+
 .offset-top {
     margin-top: 70px;
 }
@@ -36,4 +37,9 @@
 
 .thumb .img-title {
     text-align: center;
+}
+
+.blueimp-control {
+    color: #ffffff;
+    font-family: 'Lucida Grande', 'Lucida Sans Unicode', Arial, sans-serif;
 }
