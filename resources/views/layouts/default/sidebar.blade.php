@@ -4,7 +4,7 @@
             Добавить файлы
             {!! Form::file('', ['class' => 'form-control-file', 'name' => 'files[]', 'required', 'multiple', 'onchange' => "document.getElementById('uploadform').submit()"]) !!}
         </div>
-        {!! Form::submit('Отправить', ['class' => 'form-control btn btn-primary', 'hidden']) !!}
+        {!! Form::submit('Отправить', ['id' => 'submitControl', 'class' => 'form-control btn btn-primary', 'hidden']) !!}
     {!! Form::close() !!}
 
     @if ($disk == "gas-arrival")

@@ -21,6 +21,7 @@
     left: 0;
     height: 100%;
     width: 100%;
+    font-size: 5px;
     opacity: 0;
 }
 
@@ -47,6 +48,10 @@
 }
 
 .blueimp-control {
-    color: #ffffff;
-    font-family: 'Lucida Grande', 'Lucida Sans Unicode', Arial, sans-serif;
+    color: #adb5bd !important;
+    font-family: 'Lucida Grande', 'Lucida Sans Unicode', Arial, sans-serif !important;
+}
+
+.blueimp-control:hover {
+    color: #ffffff !important;
 }

@@ -36,7 +36,7 @@ class Folder extends Model
         {
             $content = Storage::disk($disk)->get($path);
             $img = Image::make($content)
-                ->fit(250, 250, function ($constraint) {
+                ->fit(350, 350, function ($constraint) {
                     $constraint->upsize();
                 });
 

@@ -23,7 +23,7 @@
             @foreach($files as $path => $params)
             <div class="col-xl-2 col-lg-3 col-md-4 col-sm-6 col-12 p-0">
                 <div class="thumb-container">
-                    <a class="thumb" href="{{ asset($params['url']) }}" title="{{ $path }}" onclick="">
+                    <a class="thumb" href="{{ asset($params['url']) }}" title="{{ $path }}" onclick="return false;">
                         <img src="{{ $params['url_image'] }}" alt=" {{ $path }}" title="{{ $path }}" width="100%">
                     </a>
                 </div>
