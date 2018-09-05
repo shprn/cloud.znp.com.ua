@@ -19,10 +19,12 @@ Route::group(['middleware'=>'web'], function(){
 
     // group disk/
     Route::group(['prefix' => '/{disk}', 'middleware'=>'checkdisk'], function() {
-        Route::get('/storage/{path?}', 'Disk@index')->where('path', '.*');
-        Route::get('/today', 'Disk@today');
-        Route::get('/todayHome', 'Disk@todayHome');
-        Route::post('/uploadFile', 'Disk@uploadFile');
+        Route::get('/storage/{path?}', 'DiskController@index')->where('path', '.*');
+        Route::get('/today', 'DiskController@today');
+        Route::get('/todayHome', 'DiskController@todayHome');
+        Route::post('/uploadFile', 'DiskController@uploadFile');
     });
 });
 
+
+Auth::routes();

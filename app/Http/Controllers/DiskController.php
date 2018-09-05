@@ -6,7 +6,7 @@ use Illuminate\Http\Request;
 use App\Folder;
 use Illuminate\Support\Facades\Storage;
 
-class Disk extends Controller
+class DiskController extends Controller
 {
     // main index
     public function index($disk, $path = "")

@@ -1,7 +1,4 @@
 @extends("layouts.default")
-@extends("layouts.default.menubar")
-@extends("layouts.default.sidebar")
-@extends("layouts.default.navbar")
 
 @section("main")
     <div class="container-fluid">

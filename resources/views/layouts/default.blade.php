@@ -1,3 +1,7 @@
+@include("layouts.default.menubar")
+@include("layouts.default.sidebar")
+@include("layouts.default.navbar")
+
 <!doctype html>
 <html lang="{{ app()->getLocale() }}">
 <head>
@@ -12,6 +16,7 @@
     <link rel="stylesheet" href="{{ asset('css/app.css?ver=1.0.0') }}">
     <link rel="stylesheet" href="{{ asset('css/styles.css?ver=1.0.1') }}">
     <link rel="stylesheet" href="{{ asset('css/blueimp-gallery.min.css?ver=2.33.0') }}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css" />
 </head>
 <body>
     <!-- Main menu -->
