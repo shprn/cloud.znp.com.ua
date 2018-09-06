@@ -13,9 +13,9 @@
             <!-- Left Side Of Navbar -->
             @if(isset($disks))
                 <ul class="navbar-nav mr-auto">
-                    @foreach($disks as $cur_disk_name => $cur_disk)
-                        <li class="nav-item {{ $cur_disk_name == $disk ? 'active' : ''}}">
-                            <a class="nav-link" href="{{ $cur_disk['url-directory'] }}">{{ $cur_disk['title'] }}</a>
+                    @foreach($disks as $cur_disk)
+                        <li class="nav-item {{ $cur_disk->name == $disk ? 'active' : ''}}">
+                            <a class="nav-link" href="{{ $cur_disk->url }}">{{ $cur_disk->title }}</a>
                         </li>
                     @endforeach
                 </ul>

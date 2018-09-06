@@ -11,20 +11,16 @@ class Folder extends Model
 {
     //public $allowedTypes = array(IMAGETYPE_PNG, IMAGETYPE_JPEG, IMAGETYPE_GIF);
     public $disk;
-    public $disk_title;
     public $path;
     public $name;
     public $url;
-    public $directories;
-    public $files;
-    public $links;
 
     // resize and cache file
-    public static function cacheImage($disk, $path)
+    public static function cacheImage($diskName, $path)
     {
 
         // if not image
-        $mimeType = Storage::disk($disk)->mimeType($path);
+        $mimeType = Storage::disk($diskName)->mimeType($path);
         if(!$mimeType)
             return asset("img/file.png");
         else if (substr($mimeType, 0, 6) != "image/")
@@ -32,104 +28,99 @@ class Folder extends Model
 
 
         // if image
-        if (!Storage::disk($disk)->exists("_cache/".$path))
+        if (!Storage::disk($diskName)->exists("_cache/".$path))
         {
-            $content = Storage::disk($disk)->get($path);
+            $content = Storage::disk($diskName)->get($path);
             $img = Image::make($content)
                 ->fit(350, 350, function ($constraint) {
                     $constraint->upsize();
                 });
 
-            Storage::disk($disk)->put("_cache/" . $path, $img->encode());
+            Storage::disk($diskName)->put("_cache/" . $path, $img->encode());
         }
 
-        return Storage::disk($disk)->url("_cache/".$path);
+        return Storage::disk($diskName)->url("_cache/".$path);
 
     }
 
     //
-    public static function cacheDisk($disk)
+    public static function cacheDisk($diskName)
     {
-        $files = Storage::disk($disk)->allFiles("");
+        $files = Storage::disk($diskName)->allFiles("");
         foreach($files as $file)
         {
-            Folder::cacheImage($disk, $file);
+            Folder::cacheImage($diskName, $file);
         }
     }
 
     //
-    function __construct($disk, $path="")
+    function __construct($diskName, $path="")
     {
-        $disks = config("filesystems.disks");
-        $this->disk = $disk;
-        $this->disk_title = $disks[$disk]['title'];
+        $this->disk = Disk::find($diskName);
         $this->path = $path;
         $this->name =  basename($path);
-        //$this->url =  Storage::disk($disk)->url($path);
-        $this->url = $disks[$disk]['url-directory']. ($path == "" ? "" : "/".$path);
-
-        $this->getDirectories();
-        $this->getFiles();
-        $this->getLinks();
+        $this->url = $this->disk->url. ($path == "" ? "" : "/".$path);
     }
 
     //
-    protected function getFiles()
+    public function getFiles()
     {
-        $this->files = array_flip(Storage::disk($this->disk)->files($this->path));
-        foreach($this->files as $cur_path => &$cur_params) {
+        $files = array_flip(Storage::disk($this->disk->name)->files($this->path));
+        foreach($files as $cur_path => &$cur_params) {
             $arr = explode(".", $cur_path);
             $ext = array_pop($arr);
             if (strtolower($ext) == "db")
             {
-                unset($this->files[$cur_path]);
+                unset($files[$cur_path]);
                 continue;
             }
 
             $cur_params = array();
             $names = explode("/", $cur_path);
             $cur_params['name'] = array_pop($names);
-            $cur_params['url'] = Storage::disk($this->disk)->url($cur_path);
-            $cur_params['url_image'] = Folder::cacheImage($this->disk, $cur_path);
+            $cur_params['url'] = Storage::disk($this->disk->name)->url($cur_path);
+            $cur_params['url_image'] = Folder::cacheImage($this->disk->name, $cur_path);
         }
 
-        ksort($this->files);
+        ksort($files);
+
+        return $files;
     }
 
     //
-    protected function getDirectories()
+    public function getDirectories()
     {
-        $disks = config("filesystems.disks");
-        $this->directories = array_flip(Storage::disk($this->disk)->directories($this->path));
-        foreach($this->directories as $cur_path => &$cur_params) {
+        $directories = array_flip(Storage::disk($this->disk->name)->directories($this->path));
+        foreach($directories as $cur_path => &$cur_params) {
             if ($cur_path == "_cache")
             {
-                unset($this->directories[$cur_path]);
+                unset($directories[$cur_path]);
                 continue;
             }
 
             $cur_params = array();
             $names = explode("/", $cur_path);
             $cur_params['name'] = array_pop($names);
-            $cur_params['url'] = $disks[$this->disk]['url-directory'] . ($cur_path == "" ? "" : "/" . $cur_path);
-            $cur_params['empty'] = count(Storage::disk($this->disk)->directories($cur_path)) + count(Storage::disk($this->disk)->files($cur_path)) == 0 ? true : false;
+            $cur_params['url'] = $this->disk->urlDirectory . ($cur_path == "" ? "" : "/" . $cur_path);
+            $cur_params['empty'] = count(Storage::disk($this->disk->name)->directories($cur_path)) + count(Storage::disk($this->disk->name)->files($cur_path)) == 0 ? true : false;
         }
 
         if ($this->path == "")
-            krsort($this->directories);
+            krsort($directories);
         else
-            ksort($this->directories);
+            ksort($directories);
+
+        return $directories;
     }
 
     //
-    protected function getLinks()
+    public function getLinks()
     {
-        $this->links = array();
+        $links = array();
 
-        $disks = config("filesystems.disks");
         // first element - project_name
-        $path_elem = $disks[$this->disk]['url-directory'];
-        $this->links[$this->disk_title] = $path_elem;
+        $path_elem = $this->disk->urlDirectory;
+        $links[$this->disk->title] = $path_elem;
 
         $path_array = explode("/", $this->path);
 
@@ -139,19 +130,20 @@ class Folder extends Model
                 continue;
 
             $path_elem .= "/".$elem;
-            $this->links[$elem] = $path_elem;
+            $links[$elem] = $path_elem;
         }
 
+        return $links;
     }
 
     //
     public function createDirectory($name)
     {
         $path = $this->path=="" ? $name : $this->path."/".$name;
-        if(!Storage::disk($this->disk)->exists($path))
-            Storage::disk($this->disk)->makeDirectory($path);
+        if(!Storage::disk($this->disk->name)->exists($path))
+            Storage::disk($this->disk->name)->makeDirectory($path);
 
-        return new Folder($this->disk, $path);
+        return new Folder($this->disk->name, $path);
     }
 
     //

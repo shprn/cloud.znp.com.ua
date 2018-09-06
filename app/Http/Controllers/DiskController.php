@@ -3,55 +3,44 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use App\Disk;
 use App\Folder;
-use Illuminate\Support\Facades\Storage;
 
 class DiskController extends Controller
 {
     // main index
-    public function index($disk, $path = "")
+    public function index(Request $request)
     {
-        $disks = config("filesystems.disks");
-        $folder = new Folder($disk, $path);
+        $diskName = $request->route("disk");
+        $path = $request->route("path");
+        $folder = new Folder($diskName, $path);
+
+        $links = $folder->getLinks();
+        $files = $folder->getFiles();
+        $directories = $folder->getDirectories();
 
         return view("disk")->with([
-                'disks' => $disks,
-                'disk' => $disk,
-                'links' => $folder->links,
-                'files' => $folder->files,
-                'directories' => $folder->directories
+                'disks' => Disk::all(),
+                'disk' => $diskName,
+                'links' => $links,
+                'files' => $files,
+                'directories' => $directories
         ]);
     }
 
     // today folder
     public function today(Request $request)
     {
-        $folder = new Folder($request->route("disk"));
+        $diskName = $request->route("disk");
+        $folder = new Folder($diskName);
         return redirect(asset($folder->today()->url));
     }
 
     // today folder
     public function todayHome(Request $request)
     {
-        $folder = new Folder($request->route("disk"));
+        $path = $request->route("path");
+        $folder = new Folder($path);
         return redirect(asset($folder->today()->home()->url));
     }
-
-    // upload file
-    public function uploadFile(Request $request)
-    {
-        $folder = (new Folder($request->route("disk")))->today()->home();
-
-        if ($request->hasFile('files')) {
-            foreach ($request->file('files') as $file) {
-                Storage::disk($request->route("disk"))->put(
-                    $folder->path . "/" . $file->getClientOriginalName(),
-                    file_get_contents($file->getRealPath())
-                );
-            }
-        }
-
-        return redirect(asset($folder->url));
-    }
-
 }

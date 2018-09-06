@@ -11,10 +11,11 @@
 |
 */
 
+use App\Disk;
 
 Route::group(['middleware'=>'web'], function(){
     Route::get('/', function() {
-        return redirect("/".config("filesystems.default")."/storage");
+        return redirect("/".Disk::default()->name."/storage");
     })->name("disk_default");
 
     // group disk/
@@ -22,7 +23,7 @@ Route::group(['middleware'=>'web'], function(){
         Route::get('/storage/{path?}', 'DiskController@index')->where('path', '.*');
         Route::get('/today', 'DiskController@today');
         Route::get('/todayHome', 'DiskController@todayHome');
-        Route::post('/uploadFile', 'DiskController@uploadFile');
+        Route::post('/uploadFile', 'UploadFileController@upload');
     });
 });
 

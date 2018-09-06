@@ -47,27 +47,27 @@ return [
             'driver' => 'local',
             'root' => '/home/shapran/azs-gaz',                                // phisical/path/to/dir
             'url' => env('APP_URL').'/gas-arrival-storage',             // ln -s in public dir
+            'urlDirectory' => env('APP_URL').'/gas-arrival/storage',   // /[disk-name]/storage
             'visibility' => 'public',
             'title' => 'Слив газовоза',
-            'url-directory' => env('APP_URL').'/gas-arrival/storage',   // /[disk-name]/storage
         ],
 
         'azs-general' => [
             'driver' => 'local',
             'root' => '/home/shapran/azs-general',                            // phisical/path/to/dir
             'url' => env('APP_URL').'/azs-general-storage',             // ln -s in public dir
+            'urlDirectory' => env('APP_URL').'/azs-general/storage',   // /[disk-name]/storage
             'visibility' => 'public',
             'title' => 'Общий вид АЗС',
-            'url-directory' => env('APP_URL').'/azs-general/storage',   // /[disk-name]/storage
         ],
 
         'office-general' => [
             'driver' => 'local',
             'root' => '/home/shapran/office-general',                            // phisical/path/to/dir
             'url' => env('APP_URL').'/office-general-storage',             // ln -s in public dir
+            'urlDirectory' => env('APP_URL').'/office-general/storage',   // /[disk-name]/storage
             'visibility' => 'public',
             'title' => 'Головной офис',
-            'url-directory' => env('APP_URL').'/office-general/storage',   // /[disk-name]/storage
         ],
 
     ],
