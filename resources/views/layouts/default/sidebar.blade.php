@@ -1,19 +1,26 @@
 @section("sidebar")
-    @if(isset($disk))
-        {!! Form::open(['url' => Request::route('disk')."/uploadFile", 'method' => 'POST', 'enctype' => 'multipart/form-data', 'id' => 'uploadform']) !!}
-            <div class="form-control btn btn-primary upload-form">
-                Добавить файлы
-                {!! Form::file('', ['class' => 'form-control-file', 'name' => 'files[]', 'required', 'multiple', 'onchange' => "document.getElementById('uploadform').submit()"]) !!}
-            </div>
-            {!! Form::submit('Отправить', ['id' => 'submitControl', 'class' => 'form-control btn btn-primary', 'hidden']) !!}
-        {!! Form::close() !!}
 
-        @if ($disk == "gas-arrival")
-        <ul class="nav">
-            <li class="nav-item">
-                <a class="nav-link" href="{{ asset(Request::route('disk').'/today') }}">Сегодня</a>
-            </li>
-        </ul>
+    <div class="col-12 sidebar" style="z-index: 1000;">
+
+        <!-- Button-Forms -->
+        @if(Disk::current())
+            @if(isset($forms))
+                @foreach($forms as $form)
+                    @include("layouts.default.$form")
+                @endforeach
+            @endif
         @endif
-    @endif
+
+        <!-- Links -->
+        @if(isset($links))
+            <ul class="nav flex-column mt-3">
+                @foreach($links as $title => $link)
+                    <li class="nav-item">
+                        <a class="nav-link" href="{{ $link }}">{{ $title }}</a>
+                    </li>
+                @endforeach
+            </ul>
+        @endif
+    </div>
+
 @endsection

@@ -25,10 +25,7 @@
     <div class="container-fluid" id="app">
         <div class="row">
             <!-- Left sidebar-->
-            <div class="col-12 sidebar" style="z-index: 1000;">
-                @yield("sidebar")
-            </div>
-
+            @yield("sidebar")
 
             <!-- Main work area -->
             <div class="col">

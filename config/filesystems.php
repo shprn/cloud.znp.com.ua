@@ -50,6 +50,7 @@ return [
             'urlDirectory' => env('APP_URL').'/gas-arrival/storage',   // /[disk-name]/storage
             'visibility' => 'public',
             'title' => 'Слив газовоза',
+            'controller' => '\App\Http\Controllers\Disks\GasArrivalDiskController',
         ],
 
         'azs-general' => [
@@ -59,6 +60,7 @@ return [
             'urlDirectory' => env('APP_URL').'/azs-general/storage',   // /[disk-name]/storage
             'visibility' => 'public',
             'title' => 'Общий вид АЗС',
+            'controller' => '\App\Http\Controllers\Disks\DefaultDiskController',
         ],
 
         'office-general' => [
@@ -68,6 +70,7 @@ return [
             'urlDirectory' => env('APP_URL').'/office-general/storage',   // /[disk-name]/storage
             'visibility' => 'public',
             'title' => 'Головной офис',
+            'controller' => '\App\Http\Controllers\Disks\DefaultDiskController',
         ],
 
     ],

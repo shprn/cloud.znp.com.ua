@@ -2,18 +2,46 @@
 
 namespace App;
 
-use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Request;
 
 class Disk
 {
+    public $name = '';
+
     // from config-array to class
-    private static function assign($name, $values) {
-        $class = new self;
-        $class->{'name'}= $name;
+    private function fill($name, $values=null) {
+        if(!$name)
+            return;
+
+        if(!$values)
+            $values = config("filesystems.disks")[$name];
+
+        if(!$values)
+            return;
+
+        $this->{'name'}= $name;
         foreach($values as $key => $value){
-            $class->{$key}= $value;
+            $this->{$key}= $value;
         }
-        return $class;
+
+        return $this;
+    }
+
+    public static function current() {
+        return new Disk(Request::route('disk'));
+    }
+
+    public static function default() {
+        return new Disk(config("filesystems.default"));
+    }
+
+    public static function currentName() {
+        $current = Disk::current();
+        if($current)
+            return $current->name;
+        else
+            return "";
     }
 
     // all disks
@@ -21,21 +49,29 @@ class Disk
     {
         $arrayDisks = config("filesystems.disks");
         foreach($arrayDisks as $name => &$disk) {
-            $disk = self::assign($name, $disk);
+            $disk = (new Disk)->fill($name, $disk);
         }
 
         return $arrayDisks;
     }
 
-    // find disk by disk-name
-    public static function find($diskName) {
-        $arrayDisks = config("filesystems.disks");
-        return self::assign($diskName, $arrayDisks[$diskName]);
+    function __construct($diskName="") {
+        if ($diskName)
+            $this->fill($diskName);
     }
 
-    // default disk
-    public static function default()
+    public static function allowed()
     {
-        return self::find(config("filesystems.default"));
+        if (Auth::guest()) {
+            return array();
+        }
+
+        $disks = self::all();
+        $disks = array_filter($disks, function ($elem) {
+            return Auth::user()->can('read', $elem);
+        });
+
+        return $disks;
     }
+
 }

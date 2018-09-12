@@ -2,125 +2,134 @@
 
 namespace App;
 
-use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
-use Carbon\Carbon;
-use Intervention\Image\Facades\Image;
+use Illuminate\Support\Facades\Request;
 
-class Folder extends Model
+class Folder
 {
     //public $allowedTypes = array(IMAGETYPE_PNG, IMAGETYPE_JPEG, IMAGETYPE_GIF);
     public $disk;
     public $path;
     public $name;
     public $url;
-
-    // resize and cache file
-    public static function cacheImage($diskName, $path)
-    {
-
-        // if not image
-        $mimeType = Storage::disk($diskName)->mimeType($path);
-        if(!$mimeType)
-            return asset("img/file.png");
-        else if (substr($mimeType, 0, 6) != "image/")
-            return asset("img/file.png");
-
-
-        // if image
-        if (!Storage::disk($diskName)->exists("_cache/".$path))
-        {
-            $content = Storage::disk($diskName)->get($path);
-            $img = Image::make($content)
-                ->fit(350, 350, function ($constraint) {
-                    $constraint->upsize();
-                });
-
-            Storage::disk($diskName)->put("_cache/" . $path, $img->encode());
-        }
-
-        return Storage::disk($diskName)->url("_cache/".$path);
-
-    }
-
-    //
-    public static function cacheDisk($diskName)
-    {
-        $files = Storage::disk($diskName)->allFiles("");
-        foreach($files as $file)
-        {
-            Folder::cacheImage($diskName, $file);
-        }
-    }
+    public $empty = false;
 
     //
     function __construct($diskName, $path="")
     {
-        $this->disk = Disk::find($diskName);
+        $this->disk = new Disk($diskName);
         $this->path = $path;
-        $this->name =  basename($path);
-        $this->url = $this->disk->url. ($path == "" ? "" : "/".$path);
+        $this->name = self::getName($path);
+        $this->url = $this->disk->urlDirectory. ($path == "" ? "" : "/".$path);
+    }
+
+    public static function current() {
+        return new Folder(Request::route("disk"), Request::route("path"));
+    }
+
+    private static function getName($path) {
+        $arrPath = explode('/', $path);
+        return array_pop($arrPath);
+    }
+
+    public function pathWithDisk()
+    {
+        return $this->disk->name . ($this->path == "" ? "" : "/" . $this->path);
     }
 
     //
-    public function getFiles()
+    public function getAllFiles()
     {
-        $files = array_flip(Storage::disk($this->disk->name)->files($this->path));
-        foreach($files as $cur_path => &$cur_params) {
-            $arr = explode(".", $cur_path);
+        $files = Storage::disk($this->disk->name)->files($this->path);
+        $files = array_filter($files, function($elem) {
+            $arr = explode(".", $elem);
             $ext = array_pop($arr);
-            if (strtolower($ext) == "db")
-            {
-                unset($files[$cur_path]);
-                continue;
-            }
+            return strtolower($ext) != "db";
+        });
 
-            $cur_params = array();
-            $names = explode("/", $cur_path);
-            $cur_params['name'] = array_pop($names);
-            $cur_params['url'] = Storage::disk($this->disk->name)->url($cur_path);
-            $cur_params['url_image'] = Folder::cacheImage($this->disk->name, $cur_path);
+        foreach($files as &$elem) {
+            $arr =  explode("/", $elem);
+            $elem = (new \App\File($this, array_pop($arr)))
+                ->withCacheImage()
+                ->withInfoImage();
         }
 
-        ksort($files);
+        usort($files, function ($elem1, $elem2) {
+            return ($elem1->name > $elem2->name) ? 1 : -1;
+        });
+
+        return $files;
+    }
+
+    public function getAllowedFiles() {
+        if (Auth::guest())
+            return array();
+
+        if (Auth::user()->cant('read', $this))
+            return array();
+
+        $files = $this->getAllFiles();
+        $files = array_filter($files, function ($elem) {
+            return Auth::user()->can('read', $elem);
+        });
 
         return $files;
     }
 
     //
-    public function getDirectories()
+    public function getAllDirectories()
     {
-        $directories = array_flip(Storage::disk($this->disk->name)->directories($this->path));
-        foreach($directories as $cur_path => &$cur_params) {
-            if ($cur_path == "_cache")
-            {
-                unset($directories[$cur_path]);
-                continue;
-            }
 
-            $cur_params = array();
-            $names = explode("/", $cur_path);
-            $cur_params['name'] = array_pop($names);
-            $cur_params['url'] = $this->disk->urlDirectory . ($cur_path == "" ? "" : "/" . $cur_path);
-            $cur_params['empty'] = count(Storage::disk($this->disk->name)->directories($cur_path)) + count(Storage::disk($this->disk->name)->files($cur_path)) == 0 ? true : false;
+        $directories = Storage::disk($this->disk->name)->directories($this->path);
+
+        // delete __cache directory
+        $directories = array_filter($directories, function($elem) {
+                return $elem != "_cache";
+            });
+
+        // string -> Folder
+        foreach($directories as &$elem) {
+            $elem = new Folder($this->disk->name, $elem);
         }
 
-        if ($this->path == "")
-            krsort($directories);
-        else
-            ksort($directories);
+        if ($this->path == "") {
+            usort($directories, function ($elem1, $elem2) {
+                return ($elem1->name > $elem2->name) ? -1 : 1;
+            });
+        } else {
+            usort($directories, function ($elem1, $elem2) {
+                return ($elem1->name > $elem2->name) ? 1 : -1;
+            });
+        }
+
 
         return $directories;
     }
 
+    public function getAllowedDirectories() {
+        if (Auth::guest())
+            return array();
+
+        if (Auth::user()->cant('read', $this))
+            return array();
+
+        $folders = $this->getAllDirectories();
+        $folders = array_filter($folders, function ($elem) {
+            return Auth::user()->can('read', $elem);
+        });
+
+        return $folders;
+    }
+
     //
-    public function getLinks()
+    public function getBreadcrumbs()
     {
-        $links = array();
+        $breadcrumbs = array();
 
         // first element - project_name
         $path_elem = $this->disk->urlDirectory;
-        $links[$this->disk->title] = $path_elem;
+        $breadcrumbs[0] = ['title' => $this->disk->title, 'url' => $path_elem];
 
         $path_array = explode("/", $this->path);
 
@@ -130,10 +139,10 @@ class Folder extends Model
                 continue;
 
             $path_elem .= "/".$elem;
-            $links[$elem] = $path_elem;
+            array_push($breadcrumbs, ['title' => $elem, 'url' => $path_elem]);
         }
 
-        return $links;
+        return $breadcrumbs;
     }
 
     //
@@ -147,15 +156,7 @@ class Folder extends Model
     }
 
     //
-    public function today()
-    {
-        return $this->createDirectory(Carbon::now()->toDateString());
+    public function root() {
+        return new Folder($this->disk->name, '');
     }
-
-    //
-    public function home()
-    {
-        return $this->createDirectory(config("filesystems.home_folder"));
-    }
-
 }

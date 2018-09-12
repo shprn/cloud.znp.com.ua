@@ -1,5 +1,8 @@
 // Gallery
 document.getElementById('links').onclick = function (event) {
+    if (!event.target.src)
+        return;
+
     event = event || window.event;
     var target = event.target || event.srcElement,
         link = target.src ? target.parentNode : target,
@@ -7,5 +10,3 @@ document.getElementById('links').onclick = function (event) {
         links = this.getElementsByTagName('a');
     blueimp.Gallery(links, options);
 };
-
-
