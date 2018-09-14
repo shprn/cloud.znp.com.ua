@@ -6,8 +6,16 @@
 
 @media (min-width: 768px) {
     .sidebar {
-        max-width: 200px;
+        width: 250px;
     }
+}
+
+.full-height {
+    height: 80vh;
+}
+
+.half-height {
+    height: 50vh;
 }
 
 .upload-form {

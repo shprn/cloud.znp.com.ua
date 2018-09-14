@@ -13875,7 +13875,6 @@ module.exports = __webpack_require__(42);
 /* 12 */
 /***/ (function(module, exports, __webpack_require__) {
 
-
 /**
  * First we will load all of this project's JavaScript dependencies which
  * includes Vue and other libraries. It is a great starting point when
@@ -13896,14 +13895,29 @@ Vue.component('example-component', __webpack_require__(38));
 
 var app = new Vue({
     el: '#app',
+    data: {
+        activeFile: []
+    },
     methods: {
-        Gallery: function Gallery() {
-            event = event || window.event;
-            var target = event.target || event.srcElement,
-                link = target.src ? target.parentNode : target,
-                options = { index: link, event: event },
-                links = this.getElementsByTagName('a');
-            blueimp.Gallery(links, options);
+        setPropertyActiveFile: function setPropertyActiveFile(name, value) {
+            if (value) this.activeFile.push({
+                'name': name,
+                'value': value
+            });
+        },
+
+
+        setActiveFile: function setActiveFile(event) {
+            var elem = event.target;
+
+            if (elem) {
+                this.activeFile = [];
+                this.setPropertyActiveFile('Имя', elem.getAttribute('data-name'));
+                this.setPropertyActiveFile('Снято', elem.getAttribute('data-date-time-original'));
+                this.setPropertyActiveFile('Камера', elem.getAttribute('data-model'));
+            } else {
+                this.activeFile = [];
+            }
         }
     }
 });

@@ -17,5 +17,31 @@ window.Vue = require('vue');
 Vue.component('example-component', require('./components/ExampleComponent.vue'));
 
 const app = new Vue({
-    el: '#app'
+    el: '#app',
+    data: {
+        activeFile: []
+    },
+    methods: {
+        setPropertyActiveFile(name, value) {
+            if (value)
+                this.activeFile.push({
+                    'name': name,
+                    'value': value
+                });
+        },
+
+        setActiveFile: function (event) {
+            let elem = event.target;
+
+            if (elem) {
+                this.activeFile = [];
+                this.setPropertyActiveFile('Имя', elem.getAttribute('data-name'));
+                this.setPropertyActiveFile('Снято', elem.getAttribute('data-date-time-original'));
+                this.setPropertyActiveFile('Камера', elem.getAttribute('data-model'));
+
+            } else {
+                this.activeFile = [];
+            }
+        }
+    }
 });

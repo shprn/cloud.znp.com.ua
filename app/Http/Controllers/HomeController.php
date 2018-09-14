@@ -12,15 +12,11 @@ class HomeController extends Controller
 
         $disks = Disk::allowed();
 
-        if (count($disks) == 1)
-            return redirect()->route("disk", [
-                'disk' => array_shift($disks)->name,
-                'path' => ""
-            ]);
-
-        return view("home")->with([
-            'disks' => $disks,
-            'disk' => ''
-        ]);
+        if (Auth::guest())
+            return redirect()->route('login');
+        else if (count($disks) > 0)
+            return redirect()->route('disk', ['disk' => reset($disks)->name, 'path' => '']);
+        else
+            return view("home")->with(['disks' => $disks]);
     }
 }

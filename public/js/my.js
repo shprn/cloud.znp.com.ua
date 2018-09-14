@@ -1,5 +1,5 @@
 // Gallery
-document.getElementById('links').onclick = function (event) {
+document.getElementById('links').ondblclick = function (event) {
     if (!event.target.src)
         return;
 

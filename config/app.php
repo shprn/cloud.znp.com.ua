@@ -213,6 +213,7 @@ return [
         'Form' => Collective\Html\FormFacafe::class,
         'Html' => Collective\Html\HtmlFacafe::class,
         'Image' => Intervention\Image\Facades\Image::class,
+        'Carbon' => Illuminate\Support\Carbon::class,
         'Disk' => App\Disk::class,
         'DiskController' => App\Http\Controllers\Disks\DiskController::class,
     ],

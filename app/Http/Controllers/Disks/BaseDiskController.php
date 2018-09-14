@@ -8,13 +8,14 @@ use Illuminate\Support\Facades\Request;
 use Illuminate\Support\Facades\Validator;
 use App\Disk;
 use App\Folder;
+use Illuminate\Support\Facades\Auth;
 
 abstract class BaseDiskController extends Controller
 {
 
     protected function getContextForms() {
 
-        return ['createDirectoryForm', 'uploadFilesForm'];
+        return ['createDirectoryButton' => [], 'uploadFilesButton' => []];
     }
 
     protected function getContextLinks() {
@@ -55,7 +56,7 @@ abstract class BaseDiskController extends Controller
         $forms = $this->getContextForms();
         $links = $this->getContextLinks();
 
-        return view("disk")->with([
+        return view("index")->with([
                 'disks' => $disks,
                 'breadcrumbs' => $breadcrumbs,
                 'folders' => $folders,
@@ -84,19 +85,19 @@ abstract class BaseDiskController extends Controller
 
     //
     public function createDirectory() {
-        // folder from input
-        $folder = new Folder(Request::input('disk'), Request::input('path'));
 
         $validator = Validator::make(Request::all(), [
             'nameDirectory' => 'required|max:100',
         ]);
 
         if ($validator->fails()) {
-            return redirect(asset($folder->url))
+            return back()
                 ->withErrors($validator);
         }
 
-        $folder->createDirectory(Request::input('nameDirectory'));
+        $folder = new Folder(Request::route('disk'), Request::route('path'));
+
+        $folder = $folder->createDirectory(Request::input('nameDirectory'));
 
         return redirect(asset($folder->url));
     }

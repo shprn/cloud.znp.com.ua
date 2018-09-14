@@ -63,6 +63,8 @@ class Folder
     }
 
     public function getAllowedFiles() {
+
+        // guest
         if (Auth::guest())
             return array();
 
@@ -108,6 +110,8 @@ class Folder
     }
 
     public function getAllowedDirectories() {
+
+        // guest
         if (Auth::guest())
             return array();
 

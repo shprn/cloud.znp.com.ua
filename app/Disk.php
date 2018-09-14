@@ -62,6 +62,7 @@ class Disk
 
     public static function allowed()
     {
+        // guest
         if (Auth::guest()) {
             return array();
         }

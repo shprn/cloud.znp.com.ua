@@ -4,7 +4,7 @@ namespace App\Http\Middleware;
 
 use Closure;
 
-class CheckDiskProject
+class CheckDisk
 {
     /**
      * Handle an incoming request.
@@ -19,7 +19,8 @@ class CheckDiskProject
         $disk = $request->route("disk");
 
         if (!isset($disks[$disk]))
-            return redirect()->route('disk_default');
+            abort(404);
+
 
         return $next($request);
     }

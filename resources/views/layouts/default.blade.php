@@ -1,7 +1,3 @@
-@include("layouts.default.menubar")
-@include("layouts.default.sidebar")
-@include("layouts.default.navbar")
-
 <!doctype html>
 <html lang="{{ app()->getLocale() }}">
 <head>
@@ -20,20 +16,9 @@
 </head>
 <body>
     <!-- Main menu -->
-    @yield("menubar")
+    @include("layouts.default.menubar")
 
-    <div class="container-fluid" id="app">
-        <div class="row">
-            <!-- Left sidebar-->
-            @yield("sidebar")
-
-            <!-- Main work area -->
-            <div class="col">
-                @yield('navbar')
-                @yield('main')
-            </div>
-        </div>
-    </div>
+    @yield("main")
 
     <!-- Optional JavaScript -->
     <!-- jQuery first, then Popper.js, then Bootstrap JS -->
