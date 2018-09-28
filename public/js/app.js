@@ -13896,28 +13896,72 @@ Vue.component('example-component', __webpack_require__(38));
 var app = new Vue({
     el: '#app',
     data: {
-        activeFile: []
+        disk: '',
+        folder: '',
+        activeFileId: -1,
+        activeFileElem: null,
+        activeDirectoryId: -1,
+        propertiesActiveFile: []
     },
+
+    created: function created() {
+        path = window.location.pathname;
+        arr = path.split('/storage/');
+        this.disk = arr[0];
+        this.folder = arr[1];
+    },
+
     methods: {
-        setPropertyActiveFile: function setPropertyActiveFile(name, value) {
-            if (value) this.activeFile.push({
+        setProperty: function setProperty(arr, name, value) {
+            if (value) arr.push({
                 'name': name,
                 'value': value
             });
         },
 
 
+        getPropertiesActiveFile: function getPropertiesActiveFile() {
+            this.propertiesActiveFile = [];
+            src = this.activeFileElem.src;
+            arr = src.split('/');
+            file = arr.pop();
+
+            vm = this;
+            axios({
+                'method': 'post',
+                'url': this.disk + '/getPropertiesFile/' + this.folder,
+                'data': {
+                    'file': file
+                }
+            }).then(function (response) {
+                vm.propertiesActiveFile = [];
+                vm.setProperty(vm.propertiesActiveFile, 'Имя', decodeURI(file));
+                vm.setProperty(vm.propertiesActiveFile, 'Снято', response.data['DateTimeOriginal']);
+                vm.setProperty(vm.propertiesActiveFile, 'Камера', response.data['Model']);
+            }).catch(function (error) {
+                vm.propertiesActiveFile = [];
+                vm.setProperty(vm.propertiesActiveFile, 'Имя', decodeURI(file));
+                console.log(error);
+            });
+        },
+
         setActiveFile: function setActiveFile(event) {
             var elem = event.target;
 
             if (elem) {
-                this.activeFile = [];
-                this.setPropertyActiveFile('Имя', elem.getAttribute('data-name'));
-                this.setPropertyActiveFile('Снято', elem.getAttribute('data-date-time-original'));
-                this.setPropertyActiveFile('Камера', elem.getAttribute('data-model'));
+                this.activeFileId = elem.id;
+                this.activeFileElem = elem;
+                this.getPropertiesActiveFile();
             } else {
-                this.activeFile = [];
+                this.activeFileId = -1;
+                this.activeFileElem = null;
+                this.propertiesActiveFile = [];
             }
+        },
+
+        setActiveDirectory: function setActiveDirectory(event) {
+            var elem = event.target;
+            this.activeDirectoryId = elem ? elem.id : -1;
         }
     }
 });

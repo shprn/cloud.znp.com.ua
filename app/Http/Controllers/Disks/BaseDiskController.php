@@ -67,6 +67,12 @@ abstract class BaseDiskController extends Controller
     }
 
     //
+    public function getPropertiesFile() {
+        $file = new \App\File(Folder::current(), Request::input('file'));
+        return response()->json($file->getInfoImage());
+    }
+
+    //
     public function uploadFiles() {
         // folder from input
         $folder = new Folder(Request::input('disk'), Request::input('path'));

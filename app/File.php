@@ -53,7 +53,7 @@ class File
             $content = Storage::disk($this->diskName())->get($this->path());
             $this->image = Image::make($content);
 
-            $img = $this->image->fit(350, 350, function ($constraint) {
+            $img = $this->image->fit(500, 500, function ($constraint) {
                     $constraint->upsize();
                 });
 

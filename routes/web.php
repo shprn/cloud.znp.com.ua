@@ -21,9 +21,8 @@ Route::group(['middleware'=>'web'], function(){
         Route::get('/storage/{path?}', function() { return DiskController::index(); })->where('path', '.*')->name('disk');
         Route::post('/uploadFile', function() { return DiskController::uploadFiles(); });
         Route::post('/createDirectory/{path?}', function() { return DiskController::createDirectory(); })->where('path', '.*');
+        Route::post('/getPropertiesFile/{path?}', function() { return DiskController::getPropertiesFile(); })->where('path', '.*');
     });
-
-
 
 });
 

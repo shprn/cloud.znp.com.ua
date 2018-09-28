@@ -13,10 +13,10 @@
                 </div>
 
                 <div class="container-fluid">
-                    <div class="row">
+                    <div class="row" id="directories">
                         @include("layouts.default.folders")
                     </div>
-                    <div class="row" id="links">
+                    <div class="row" id="files">
                         @include("layouts.default.files")
                     </div>
                 </div>

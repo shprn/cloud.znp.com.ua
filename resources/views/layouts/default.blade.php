@@ -24,6 +24,8 @@
     <!-- jQuery first, then Popper.js, then Bootstrap JS -->
     <script src="{{ asset('js/app.js?ver=1.0.0') }}"></script>
     <script src="{{ asset('js/blueimp-gallery.js?ver=2.33.0') }}"></script>
-    <script src="{{ asset('js/my.js?ver=1.0.0') }}"></script>
+    <script src="https://cdn.jsdelivr.net/npm/axios@0.12.0/dist/axios.min.js"></script>
+    <!--script src="{{ asset('js/my.js?ver=1.0.0') }}"></script-->
+    @stack('scripts')
 </body>
 </html>

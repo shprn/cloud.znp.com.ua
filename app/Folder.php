@@ -51,8 +51,8 @@ class Folder
         foreach($files as &$elem) {
             $arr =  explode("/", $elem);
             $elem = (new \App\File($this, array_pop($arr)))
-                ->withCacheImage()
-                ->withInfoImage();
+                ->withCacheImage();
+                //->withInfoImage();
         }
 
         usort($files, function ($elem1, $elem2) {
