@@ -62,6 +62,9 @@ class Disk
 
     public static function allowed()
     {
+        // any user
+        return self::all();
+
         // guest
         if (Auth::guest()) {
             return array();

@@ -4,6 +4,7 @@
             <div class="thumb">
                 <img src="{{ $elem->urlImage }}" alt=" {{ $elem->name }}" width="100%"
                      id="File{{$loop->index}}"
+                     data-name="{{ $elem->name }}"
                      v-on:click="setActiveFile">
             </div>
         </a>

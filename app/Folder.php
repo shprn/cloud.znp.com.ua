@@ -64,6 +64,9 @@ class Folder
 
     public function getAllowedFiles() {
 
+        // any user
+        return $this->getAllFiles();
+
         // guest
         if (Auth::guest())
             return array();
@@ -110,6 +113,9 @@ class Folder
     }
 
     public function getAllowedDirectories() {
+
+        // any user
+        return $this->getAllDirectories();
 
         // guest
         if (Auth::guest())
