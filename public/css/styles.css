@@ -1,17 +1,5 @@
-@media (max-width: 767px) {
-    html {
-        font-size: 150%;
-    }
-}
-
-@media (min-width: 768px) {
-    .sidebar {
-        max-width: 250px;
-    }
-    .sidebar-content {
-        width: 230px;
-        position: fixed;
-    }
+body {
+    padding-top: 70px;
 }
 
 .full-height {
@@ -78,4 +66,24 @@
 
 .blueimp-control:hover {
     color: #ffffff !important;
+}
+
+@media (max-width: 767px) {
+    html {
+        font-size: 150%;
+    }
+
+    body {
+        padding-top: 100px;
+    }
+}
+
+@media (min-width: 768px) {
+    .sidebar {
+        max-width: 250px;
+    }
+    .sidebar-content {
+        width: 230px;
+        position: fixed;
+    }
 }

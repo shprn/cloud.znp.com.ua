@@ -26,8 +26,8 @@ class CheckPath
             if (!Storage::disk($disk)->exists($path))
                 abort(404);
 
-            if (Auth::guest() || Auth::user()->cant('read', Folder::current()))
-                abort(403);
+            //if (Auth::guest() || Auth::user()->cant('read', Folder::current()))
+            //    abort(403);
         }
 
         return $next($request);

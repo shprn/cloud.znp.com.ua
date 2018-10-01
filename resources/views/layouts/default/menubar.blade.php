@@ -1,4 +1,4 @@
-<nav class="navbar navbar-expand-md navbar-dark bg-dark mb-2 sticky-top">
+<nav class="navbar navbar-expand-md navbar-dark bg-dark mb-2 fixed-top">
     <a class="navbar-brand" href="/">
         <img src="{{ asset('img/logo.png') }}" height="30" alt="">
         Cloud
