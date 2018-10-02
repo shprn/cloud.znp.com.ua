@@ -29,7 +29,7 @@ class Disk
     }
 
     public static function current() {
-        return new Disk(Request::route('disk'));
+        return new Disk(urldecode(Request::route('disk')));
     }
 
     public static function default() {

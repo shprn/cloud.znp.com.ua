@@ -25,7 +25,7 @@ class Folder
     }
 
     public static function current() {
-        return new Folder(Request::route("disk"), Request::route("path"));
+        return new Folder(urldecode(Request::route("disk")), urldecode(Request::route("path")));
     }
 
     private static function getName($path) {

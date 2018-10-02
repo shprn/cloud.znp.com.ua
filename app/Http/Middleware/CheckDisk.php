@@ -16,7 +16,7 @@ class CheckDisk
     public function handle($request, Closure $next)
     {
         $disks = config("filesystems.disks");
-        $disk = $request->route("disk");
+        $disk = urldecode($request->route("disk"));
 
         if (!isset($disks[$disk]))
             abort(404);

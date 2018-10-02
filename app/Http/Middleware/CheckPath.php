@@ -19,8 +19,8 @@ class CheckPath
     public function handle($request, Closure $next)
     {
 
-        $disk = $request->route("disk");
-        $path = $request->route("path");
+        $disk = urldecode($request->route("disk"));
+        $path = urldecode($request->route("path"));
 
         if($path) {
             if (!Storage::disk($disk)->exists($path))

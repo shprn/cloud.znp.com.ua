@@ -76,6 +76,11 @@ class File
             return array();
 
         $infoImage = exif_read_data(str_replace(' ', '%20', $this->url));
+        foreach($infoImage as &$value)
+            if (is_string($value)) {
+                $value = utf8_encode($value);
+            }
+
         return $infoImage;
     }
 
