@@ -21,21 +21,64 @@ const app = new Vue({
     data: {
         disk: '',
         folder: '',
-        activeFileId: -1,
-        activeFileElem: null,
-        activeDirectoryId: -1,
-        propertiesActiveFile: []
+        files: [],
+        folders: [],
+        activeFileIndex: -1,
+        activeDirectoryIndex: -1,
+        propertiesActiveFile: [],
+        readyFolders: false,
+        readyFiles: false,
     },
 
     created: function () {
-        path = window.location.pathname;
-        arr = path.split('/storage/');
+        path = decodeURI(window.location.pathname);
+        arr = path.split('/storage');
         this.disk = arr[0];
-        this.folder = arr[1];
+        if(arr.length > 0)
+            this.folder = arr[1].slice(1);
+        this.getFolders();
+        this.getFiles();
     },
 
     methods: {
-        setProperty(arr, name, value) {
+
+        getFolders: function() {
+            vm = this;
+            vm.readyFolders = false;
+            axios({
+                'method': 'post',
+                'url': this.disk + '/getFoldersJson/' + this.folder,
+
+            }).then(function (response) {
+                vm.folders = response.data;
+                vm.readyFolders = true;
+
+            }).catch(function (error) {
+                vm.folders = [];
+                vm.readyFolders = truel
+            })
+
+        },
+
+        getFiles: function() {
+            vm = this;
+            vm.readyFiles = false;
+            axios({
+                'method': 'post',
+                'url': this.disk + '/getFilesJson/' + this.folder,
+
+            }).then(function (response) {
+                vm.files = response.data;
+                vm.readyFiles = true;
+
+            }).catch(function (error) {
+                vm.files = [];
+                vm.readyFiles = true;
+            })
+
+        },
+
+        setProperty: function(arr, name, value) {
             if (value)
                 arr.push({
                     'name': name,
@@ -43,10 +86,32 @@ const app = new Vue({
                 });
         },
 
+        setActiveFile: function (event) {
+            let elem = event.target;
+
+            if (elem) {
+                this.activeFileIndex = elem.getAttribute("data-index");
+                this.getPropertiesActiveFile();
+
+            } else {
+                this.activeFileIndex = -1;
+                this.propertiesActiveFile = [];
+            }
+        },
+
+        setActiveDirectory: function (event) {
+            let elem = event.target;
+            this.activeDirectoryIndex = elem ? elem.getAttribute("data-index") : -1;
+        },
+
         getPropertiesActiveFile: function() {
-            this.propertiesActiveFile = [];
-            src = this.activeFileElem.src;
-            arr = src.split('/');
+            //this.propertiesActiveFile = [];
+            if (this.activeFileIndex < 0) {
+                return;
+            }
+
+            url = decodeURI(this.files[this.activeFileIndex].urlImage);
+            arr = url.split('/');
             file = arr.pop();
 
             vm = this;
@@ -55,44 +120,19 @@ const app = new Vue({
                 'url': this.disk + '/getPropertiesFile/' + this.folder,
                 'data': {
                     'file': file
-                    }
-                })
-                .then(function (response) {
-                    vm.propertiesActiveFile = [];
-                    vm.setProperty(vm.propertiesActiveFile, 'Имя', decodeURI(file));
-                    vm.setProperty(vm.propertiesActiveFile, 'Снято', response.data['DateTimeOriginal']);
-                    vm.setProperty(vm.propertiesActiveFile, 'Камера', response.data['Model']);
-                })
-                .catch(function (error) {
-                    vm.propertiesActiveFile = [];
-                    vm.setProperty(vm.propertiesActiveFile, 'Имя', decodeURI(file));
-                    console.log(error);
-                })
+                }
 
+            }).then(function (response) {
+                vm.propertiesActiveFile = [];
+                vm.setProperty(vm.propertiesActiveFile, 'Имя', file);
+                vm.setProperty(vm.propertiesActiveFile, 'Снято', response.data['DateTimeOriginal']);
+                vm.setProperty(vm.propertiesActiveFile, 'Камера', response.data['Model']);
 
-
-
-
+            }).catch(function (error) {
+                vm.propertiesActiveFile = [];
+                vm.setProperty(vm.propertiesActiveFile, 'Имя', file);
+            })
         },
 
-        setActiveFile: function (event) {
-            let elem = event.target;
-
-            if (elem) {
-                this.activeFileId = elem.id;
-                this.activeFileElem = elem;
-                this.getPropertiesActiveFile();
-
-            } else {
-                this.activeFileId = -1;
-                this.activeFileElem = null;
-                this.propertiesActiveFile = [];
-            }
-        },
-
-        setActiveDirectory: function (event) {
-            let elem = event.target;
-            this.activeDirectoryId = elem ? elem.id : -1;
-        }
     }
 });

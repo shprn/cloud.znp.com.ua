@@ -13,6 +13,9 @@
                 </div>
 
                 <div class="container-fluid">
+                    <div class="row align-items-center justify-content-center full-height" v-if="!readyFolders || !readyFiles">
+                        <img src = "{{ asset('img/loading2.gif') }}">
+                    </div>
                     <div class="row" id="directories">
                         @include("layouts.default.folders")
                     </div>

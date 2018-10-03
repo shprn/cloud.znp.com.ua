@@ -50,8 +50,8 @@ abstract class BaseDiskController extends Controller
     public function index()
     {
         $disks = $this->getDisks();
-        $folders = $this->getFolders();
-        $files = $this->getFiles();
+        //$folders = $this->getFolders();
+        //$files = $this->getFiles();
         $breadcrumbs = $this->getBreadcrumbs();
         $forms = $this->getContextForms();
         $links = $this->getContextLinks();
@@ -59,11 +59,21 @@ abstract class BaseDiskController extends Controller
         return view("index")->with([
                 'disks' => $disks,
                 'breadcrumbs' => $breadcrumbs,
-                'folders' => $folders,
-                'files' => $files,
+                //'folders' => $folders,
+                //'files' => $files,
                 'forms' => $forms,
                 'links' => $links
         ]);
+    }
+
+    //
+    public function getFoldersJson() {
+        return response()->json($this->getFolders());
+    }
+
+    //
+    public function getFilesJson() {
+        return response()->json($this->getFiles());
     }
 
     //

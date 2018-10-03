@@ -1,5 +1,5 @@
 @if(Disk::currentName())
-<div class="col-12 sidebar">
+<div class="col-12 sidebar mb-2">
     <div class="sidebar-content" style="z-index: 1000;">
 
         <!-- Button-Forms -->
@@ -21,7 +21,7 @@
             </ul>
         @endif
 
-        <template v-if="activeFileId != -1">
+        <template v-if="activeFileIndex != -1">
             <div class="card mt-3">
                 <div class="card-header text-center">Свойства файла</div>
                 <div class="card-body">
