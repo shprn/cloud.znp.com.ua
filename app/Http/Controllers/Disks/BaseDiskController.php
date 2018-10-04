@@ -68,12 +68,34 @@ abstract class BaseDiskController extends Controller
 
     //
     public function getFoldersJson() {
-        return response()->json($this->getFolders());
+        $folders = $this->getFolders();
+
+        $arr = array();
+        foreach($folders as $folder) {
+            array_push($arr, [
+                'name' => $folder->name,
+                'path' => $folder->path,
+                'url' => $folder->url,
+                'empty' => $folder->empty,
+            ]);
+        }
+
+        return response()->json($arr);
     }
 
     //
     public function getFilesJson() {
-        return response()->json($this->getFiles());
+        $files = $this->getFiles();
+        $arr = array();
+        foreach($files as $file) {
+            array_push($arr, [
+                'name' => $file->name,
+                'url' => $file->url,
+                'urlImage' => $file->urlImage,
+                ]);
+        }
+
+        return response()->json($arr);
     }
 
     //

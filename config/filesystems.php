@@ -75,5 +75,4 @@ return [
 
     ],
 
-    'home_folder' => 'azs-2-akim',
 ];

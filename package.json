@@ -21,6 +21,7 @@
   "dependencies": {
     "ajv": "^6.5.2",
     "blueimp-gallery": "github:blueimp/Gallery",
+    "es6-promise": "^4.2.5",
     "gulp": "^3.9.1",
     "pngquant-bin": "^5.0.0",
     "popper.js": "^1.14.4",

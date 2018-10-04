@@ -1,3 +1,4 @@
+require('es6-promise/auto');
 
 window._ = require('lodash');
 window.Popper = require('popper.js').default;

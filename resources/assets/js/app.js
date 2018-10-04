@@ -26,8 +26,8 @@ const app = new Vue({
         activeFileIndex: -1,
         activeDirectoryIndex: -1,
         propertiesActiveFile: [],
-        readyFolders: false,
-        readyFiles: false,
+        readyFolders: true,
+        readyFiles: true,
     },
 
     created: function () {
@@ -45,19 +45,29 @@ const app = new Vue({
         getFolders: function() {
             vm = this;
             vm.readyFolders = false;
-            axios({
-                'method': 'post',
-                'url': this.disk + '/getFoldersJson/' + this.folder,
+            try {
+                axios({
+                    'method': 'post',
+                    'timeout': 20000,
+                    'url': this.disk + '/getFoldersJson/' + this.folder,
 
-            }).then(function (response) {
-                vm.folders = response.data;
-                vm.readyFolders = true;
+                }).then(function (response) {
+                    vm.folders = response.data;
+                    vm.readyFolders = true;
+                    if (process.env.NODE_ENV == 'development') {
+                        console.log(response.data);
+                    }
 
-            }).catch(function (error) {
-                vm.folders = [];
-                vm.readyFolders = truel
-            })
-
+                }).catch(function (error) {
+                    vm.folders = [];
+                    vm.readyFolders = true;
+                    if (process.env.NODE_ENV == 'development') {
+                        console.log(error);
+                    }
+                })
+            } catch(e) {
+                alert(e);
+            }
         },
 
         getFiles: function() {
@@ -65,15 +75,24 @@ const app = new Vue({
             vm.readyFiles = false;
             axios({
                 'method': 'post',
+                'timeout': 200000,
                 'url': this.disk + '/getFilesJson/' + this.folder,
 
             }).then(function (response) {
                 vm.files = response.data;
                 vm.readyFiles = true;
+                if(process.env.NODE_ENV == 'development') {
+                    console.log(response.data);
+                }
+
 
             }).catch(function (error) {
                 vm.files = [];
                 vm.readyFiles = true;
+                if(process.env.NODE_ENV == 'development') {
+                    console.log(error);
+                }
+
             })
 
         },
